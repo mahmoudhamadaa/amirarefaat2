@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاختبار الإلكتروني</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --error-color: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .exam-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .closed-message {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            background: #fee2e2;
+            border-radius: 1rem;
+            border: 2px solid var(--error-color);
+        }
+
+        .closed-message p {
+            font-size: 1.5rem;
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        .timer {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            color: white;
+            direction: rtl;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem auto;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            iframe {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>اختبار عمليه ١٧٠٠مرحلة اعدادي كنيسة العذراء مريم والمارجرجس بكوم بدار</h1>
+            <div class="timer" id="timer"></div>
+        </header>
+        
+        <main class="exam-container">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScuK9R_wcYO0FXFHIHgsgE6w1Bl_abkiYOMVNLknmNiDLWPfg/viewform?usp=dialog"></iframe>
+            <div class="closed-message" id="closedMessage">
+                <p>
+                     لقد انتهت فترة الاختبار </p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    const startDate = new Date("2025-02-07T01:00:00"); // وقت بداية الاختبار
+    const endDate = new Date("2025-02-09T01:00:00");   // وقت نهاية الاختبار
+
+    function formatTime(date) {
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? "مساءً" : "صباحاً";
+
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
+    }
+
+    function updateTimer() {
+        const now = new Date();
+
+        if (now < startDate) {
+            document.querySelector("iframe").style.display = "none";
+            document.getElementById("closedMessage").style.display = "block";
+            document.getElementById("closedMessage").innerHTML = `
+                <p>الاختبار لم يبدأ بعد! <br> يبدأ في ${formatTime(startDate)}</p>
+            `;
+            document.getElementById("timer").style.display = "none";
+            return;
+        }
+
+        if (now >= endDate) {
+            document.querySelector("iframe").style.display = "none";
+            document.getElementById("closedMessage").style.display = "block";
+            document.getElementById("closedMessage").innerHTML = `
+                <p>لقد انتهت فترة الاختبار <br> Amira Refaat</p>
+            `;
+            document.getElementById("timer").style.display = "none";
+            return;
+        }
+
+        // حساب الوقت المتبقي
+        const distance = endDate - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("timer").innerHTML = `
+            موعد انتهاء الاختبار: ${formatTime(endDate)}<br>
+            الوقت المتبقي: ${days} يوم و ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية
+        `;
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
